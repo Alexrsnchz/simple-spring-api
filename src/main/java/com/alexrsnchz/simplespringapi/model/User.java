@@ -1,6 +1,10 @@
 package com.alexrsnchz.simplespringapi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -8,8 +12,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "The name cannot be null")
+    @Size(min = 5, max = 20, message = "The name must be between 5 and 20")
     private String name;
+
+    @NotNull(message = "The age cannot be null")
+    @Min(value = 18, message = "The minimum age is 18")
+    @Max(value = 120, message = "The maximum age is 120")
     private int age;
+
+    @NotNull(message = "The gender cannot be null")
     private String gender;
 
     public User() {

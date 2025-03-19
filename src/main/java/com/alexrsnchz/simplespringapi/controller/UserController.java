@@ -2,11 +2,13 @@ package com.alexrsnchz.simplespringapi.controller;
 
 import com.alexrsnchz.simplespringapi.model.User;
 import com.alexrsnchz.simplespringapi.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -20,17 +22,23 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public Optional<User> getUserById(@PathVariable Long id) {
-        return userService.findById(id);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.findById(id);
+
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/users")
-    public User storeUser(@RequestBody User user) {
-        return userService.store(user);
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        User storedUser = userService.create(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(storedUser);
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
         userService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,11 +2,11 @@ package com.alexrsnchz.simplespringapi.service;
 
 import com.alexrsnchz.simplespringapi.model.User;
 import com.alexrsnchz.simplespringapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -17,15 +17,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public User store(User user) {
+    public User create(User user) {
         return userRepository.save(user);
     }
 
     public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User not found");
+        }
+
         userRepository.deleteById(id);
     }
 }
